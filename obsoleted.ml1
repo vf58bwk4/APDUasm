@@ -1,0 +1,24 @@
+**
+** hex -> decimal (recursive)
+MCDEF H2Dr WITHS () AS <+
+MCGO L1 IF MCLENG(%A1.) GE 1
+0+
+MCGO L0
+%L1.+
+%H2D(MCSUB(%A1.,1,-1))*16+HVL(MCSUB(%A1.,0,0)).>
+**
+** remove SPACE TAB and NL
+MCDEF RSPACES WITHS () AS <+
+MCSET T2 = MCLENG(%A1.)
+MCSET T1 = 1
+%L2.+
+MCGO L0 IF T1 GR T2
+MCGO L3 IF MCSUB(%A1.,%T1.,%T1.) = < >
+MCGO L3 IF MCSUB(%A1.,%T1.,%T1.) = <	>
+MCGO L3 IF MCSUB(%A1.,%T1.,%T1.) = <
+>
+MCSUB(%A1.,%T1.,%T1.)+
+%L3.+
+MCSET T1 = T1 + 1
+MCGO L2
+>
