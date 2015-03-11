@@ -1,9 +1,9 @@
 MCSKIP MT,<>
 MCSKIP + WITHS NL
-MCSKIP *WITH* NL
+MCSKIP ;WITH; NL
 MCINS %.
-**
-** remove NL
+;;
+;; remove NL
 MCDEF RNL WITHS () AS <+
 MCSET T2 = MCLENG(%A1.)
 MCSET T1 = 1
@@ -16,8 +16,8 @@ MCSUB(%A1.,%T1.,%T1.)+
 MCSET T1 = T1 + 1
 MCGO L2
 >
-**
-** leng w/o spaces
+;;
+;; leng w/o spaces
 MCDEF NSLENG WITHS () AS <+
 MCSET T1 = 1
 MCSET T2 = MCLENG(%A1.)
@@ -33,8 +33,8 @@ MCSET T1 = T1 + 1
 MCGO L11
 %L10.+
 %T3.>
-**
-** reverse argument
+;;
+;; reverse argument
 MCDEF REV WITHS () AS <+
 MCSET T1 = MCLENG(%A1.)
 %L11.MCGO L10 IF T1 EN 0
@@ -43,8 +43,8 @@ MCSET T1 = T1 - 1
 MCGO L11
 %L10.+
 >
-**
-** decimal -> hex
+;;
+;; decimal -> hex
 MCDEF HD0  WITH & AS 0
 MCDEF HD1  WITH & AS 1
 MCDEF HD2  WITH & AS 2
@@ -76,8 +76,8 @@ MCGO L1
 MCDEF D2H WITHS () AS <+
 MCDEF <_> AS D2Hr(%A1.)
 REV(_)>
-**
-** hex -> decimal
+;;
+;; hex -> decimal
 MCDEF HV WITH & WITH 0 AS 0
 MCDEF HV WITH & WITH 1 AS 1
 MCDEF HV WITH & WITH 2 AS 2
@@ -105,16 +105,16 @@ MCSET T1 = T1 + 1
 MCGO L11
 %L10.+
 %T3.>
-**
-** maximum
+;;
+;; maximum
 MCDEF MAX WITHS (,) AS <+
 MCGO L1 IF %A2. GE %A1.
 %A1.+
 MCGO L0
 %L1.+
 %A2.>
-**
-** field formatting
+;;
+;; field formatting
 MCDEF FFC WITHS (,) AS <+
 MCSET T1 = %A2.
 %L11.MCGO L0 UNLESS T1 GE 1
@@ -122,20 +122,20 @@ MCSET T1 = %A2.
 MCSET T1 = T1 - 1
 MCGO L11
 >
-**
-** LV & TLV
+;;
+;; LV & TLV
 MCDEF LV WITHS {} AS <+
 MCDEF Val AS %B1.
 MCSET T1 = NSLENG(Val)/2
 MCDEF Len AS D2H(%T1.)
 FFC(0,%2-MCLENG(Len).)Len<>RNL(Val)+
 >
-**
+;;
 MCDEF TLV WITHS [] WITHS {} AS <%A1.LV{%B2.}>
 MCDEF Lc NL AS <LV{%B1.}
 >
-**
-** Nibble-Swap
+;;
+;; Nibble-Swap
 MCDEF NBSWAP WITHS {} AS <+
 MCSET T1 = 1
 MCSET T2 = MCLENG(%A1.)
@@ -146,19 +146,22 @@ MCGO L11
 %L10.MCGO L0 IF T1 GR T2
 -MCSUB(%A1.,%T1.,%T1.)
 >
-**
-** MCC
+;;
+;; MCC
 MCDEF MCC WITHS {} AS <NBSWAP{%A1.F}>
-**
-** PLMN
+;;
+;; PLMN
 MCDEF PLMN WITHS {-} AS <+
 MCGO L1 IF MCLENG(%A2.) EN 2
 NBSWAP{%A1.%A2.}+
 MCGO L0
 %L1.+
 NBSWAP{%A1.F%A2.}>
-**
-** APDU commands
+;;
+;; APDU .sz comments
+MCSKIP DT,/WITH/ NL
+;;
+;; APDU commands
 MCDEF OPT SEL OR SEL WITHS [] ALL NL AS <+
 MCGO LT1
 %L1.MCDEF P1P2 AS 0004
@@ -168,8 +171,8 @@ MCGO L3
 cmd: 00A4 P1P2 Lc %AT1.
 rsp: .*
 >
-**
-**
+;;
+;;
 MCDEF OPT RDB WITHS () WITHS NL OR RDB WITHS [] WITHS () WITHS NL ALL AS <+
 MCGO LT1
 %L1.MCDEF P1P2 AS 0000
@@ -179,8 +182,8 @@ MCGO L3
 cmd: 00B0 P1P2 %AT1.
 rsp: .*
 >
-**
-**
+;;
+;;
 MCDEF OPT UDB OR UDB WITHS [ OPT ] OR ] WITHS () ALL OR UDB WITHS () ALL NL AS <+
 MCGO LT1
 %L1.+
@@ -205,8 +208,8 @@ MCDEF Data AS _ FFC(F,%H2D(%A2.)*2-NSLENG(_).)
 cmd: 00D6 P1P2 Lc Data
 rsp: .*
 >
-**
-**
+;;
+;;
 MCDEF OPT RDR WITHS () WITHS NL OR RDR WITHS [] WITHS () WITHS NL ALL AS <+
 MCGO LT1
 %L1.MCDEF P1P2 AS 0002
@@ -216,8 +219,8 @@ MCGO L3
 cmd: 00B2 P1P2 %AT1.
 rsp: .*
 >
-**
-**
+;;
+;;
 MCDEF OPT UDR OR UDR WITHS [ OPT ] OR ] WITHS () ALL OR UDR WITHS () ALL NL AS <+
 MCGO LT1
 %L1.+
@@ -242,32 +245,35 @@ MCDEF Data AS _ FFC(F,%H2D(%A2.)*2-NSLENG(_).)
 cmd: 00DC P1P2 Lc Data
 rsp: .*
 >
-**
-**
+;;
+;; TODO:
+;; if leng(A1) is 4  -> PIN: ascii2hex + FFFFFFFF
+;; if leng(A1) is 8  -> PUK: ascii2hex
+;; if leng(A1) is 16 -> ADM: asis
 MCDEF VRF WITHS [] NL AS <+
 cmd: 0020 %A1. 08 %A2.
 rsp: .*
 >
-**
-**
+;;
+;;
 MCDEF GET WITHS () WITHS NL AS <+
 cmd: 00C0 0000 %A1.
 rsp: .*
 >
-**
-**
+;;
+;;
 MCDEF CRT NL AS <+
 cmd: 00E0 0000 Lc TLV[62]{%B1.}
 rsp: .*
 >
-**
-**
+;;
+;;
 MCDEF DLT NL AS <+
 cmd: 00E4 0000 Lc %A1.
 rsp: .*
 >
-**
-**
+;;
+;;
 MCDEF fcpFD   WITHS {} AS <TLV[82]{%B1.}>
 MCDEF fcpFI   WITHS {} AS <TLV[83]{%B1.}>
 MCDEF fcpLCSI WITHS {} AS <TLV[8A]{%B1.}>
@@ -275,11 +281,12 @@ MCDEF fcp8B   WITHS {} AS <TLV[8B]{%B1.}>
 MCDEF fcpFS   WITHS {} AS <TLV[80]{%B1.}>
 MCDEF fcpSFI  WITHS {} AS <TLV[88]{%B1.}>
 MCDEF fcpPI   WITHS {} AS <TLV[A5]{%B1.}>
-**
-**
+;;
+;;
 MCDEF MF        AS 3F00
 MCDEF efDIR     AS 2F00
 MCDEF dfGSM     AS 7F20
+MCDEF efSST     AS 6F38
 MCDEF efUST     AS 6F38
 MCDEF efEST     AS 6F56
 MCDEF efPNN     AS 6FC5
@@ -291,6 +298,6 @@ MCDEF efCFIS    AS 6FCB
 MCDEF efSPDI    AS 6FCD
 MCDEF efEHPLMN  AS 6FD9
 MCDEF efEHPLMNI AS 6FDB
-**
+;;
 MCSET S16 = 9
 MCSET S17 = 32
