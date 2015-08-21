@@ -1,13 +1,18 @@
-**
-** hex -> decimal (recursive)
-MCDEF H2Dr WITHS () AS <+
+;; suppose that:
+;; MCSKIP MT,<>
+;; MCSKIP + WITHS NL
+;; MCSKIP ;WITH; NL
+;; MCINS %.
+;;
+;; hex -> decimal (recursive)
+MCDEF H2DR WITHS () AS <+
 MCGO L1 IF MCLENG(%A1.) GE 1
 0+
 MCGO L0
 %L1.+
 %H2D(MCSUB(%A1.,1,-1))*16+HVL(MCSUB(%A1.,0,0)).>
-**
-** remove SPACE TAB and NL
+;;
+;; remove SPACE TAB and NL
 MCDEF RSPACES WITHS () AS <+
 MCSET T2 = MCLENG(%A1.)
 MCSET T1 = 1
