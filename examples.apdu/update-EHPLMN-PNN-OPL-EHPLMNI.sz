@@ -1,0 +1,25 @@
+
+cmd: 0020 000A 08  {$ADM}
+rsp: .*
+cmd: 00A4 040C 10 A0000000871002FF47F00189000001FF
+rsp: .*
+
+cmd: 00A4 0004 02 6FC6
+rsp: .*
+// GET (2C)
+cmd: 00DC 0002 08 52F070 0000FFFE 01
+rsp: .*
+cmd: 00DC 0002 08 52F010 0000FFFE 01
+rsp: .*
+cmd: 00DC 0002 08 FFFFFF FFFFFFFE FF
+rsp: .*
+
+cmd: 00A4 0004 02 6FD9
+rsp: .*
+// GET (25)
+cmd: 00D6 0000 09 52F010 52F070 FFFFFF
+rsp: .*
+cmd: 00A4 0004 02 6FDB
+rsp: .*
+cmd: 00D6 0000 01 00
+rsp: .*
