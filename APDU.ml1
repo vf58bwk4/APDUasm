@@ -42,7 +42,7 @@ MCSET T1 = T1 + 1
 MCGO L2
 >
 ;;
-;; leng w/o spaces
+;; length w/o spaces
 MCDEF NSLENG WITHS () AS <+
 MCSET T1 = 1
 MCSET T2 = MCLENG(%A1.)
@@ -59,8 +59,8 @@ MCGO L11
 %L10.+
 %T3.>
 ;;
-;; reverse argument
-MCDEF REV WITHS () AS <+
+;; reverse string
+MCDEF STRREVERSE WITHS () AS <+
 MCSET T1 = MCLENG(%A1.)
 %L11.MCGO L10 IF T1 EN 0
 MCSUB(%A1.,%T1.,%T1.)+
@@ -100,7 +100,7 @@ MCGO L1
 >
 MCDEF D2H WITHS () AS <+
 MCDEF <_> AS D2Hr(%A1.)
-REV(_)>
+STRREVERSE(_)>
 ;;
 ;; hex -> decimal
 MCDEF HV WITH & WITH 0 AS 0
@@ -139,23 +139,30 @@ MCGO L0
 %L1.+
 %A2.>
 ;;
-;; field formatting
-MCDEF FFC WITHS (,) AS <+
-MCSET T1 = %A2.
+;; Returns a string containing a repeating character string of the length specified
+MCDEF STRING WITHS (,) AS <+
+MCSET T1 = %A1.
 %L11.MCGO L0 UNLESS T1 GE 1
-%A1.+
+%A2.+
 MCSET T1 = T1 - 1
 MCGO L11
 >
 ;;
-;; LV & TLV
-MCDEF @ WITHS {} AS <+
+;; LLV, LV & TLV
+MCDEF @ WITH @ WITH {} AS <+
 MCDEF Val AS %B1.
 MCSET T1 = NSLENG(Val)/2
 MCDEF Len AS D2H(%T1.)
-FFC(0,%2-MCLENG(Len).)Len<>RNL(Val)+
+STRING(%4-MCLENG(Len).,0)Len<>RNL(Val)+
 >
-MCDEF @ WITHS [] WITHS {} AS <%A1.@{%B2.}>
+MCDEF @ WITH {} AS <+
+MCDEF Val AS %B1.
+MCSET T1 = NSLENG(Val)/2
+MCDEF Len AS D2H(%T1.)
+STRING(%2-MCLENG(Len).,0)Len<>RNL(Val)+
+>
+MCDEF @ WITH [] WITH {} AS <%A1.@{%B2.}>
+MCDEF ${} AS <%A1.@{%B2.}>
 ;;
 ;; Nibble-Swap
 MCDEF NBSWAP WITHS () AS <+
@@ -228,7 +235,7 @@ MCGO L4
 MCGO L21 IF MCSUB(%WD0.,0,0) = [
 MCDEF <_> AS %A2.
 MCDEF P1P2 AS 0000
-MCDEF Data AS _ FFC(F,%H2D(%A1.)*2-NSLENG(_).)
+MCDEF Data AS _ STRING(%H2D(%A1.)*2-NSLENG(_).,F)
 MCGO L4
 %L21.+
 MCDEF P1P2 AS %A1.
@@ -237,7 +244,7 @@ MCGO L4
 %L3.+
 MCDEF <_> AS %A3.
 MCDEF P1P2 AS %A1.
-MCDEF Data AS _ FFC(F,%H2D(%A2.)*2-NSLENG(_).)
+MCDEF Data AS _ STRING(%H2D(%A2.)*2-NSLENG(_).,F)
 %L4.+
 cmd: 00D6 P1P2 @{ Data}
 rsp: .*
@@ -267,7 +274,7 @@ MCGO L4
 MCGO L21 IF MCSUB(%WD0.,0,0) = [
 MCDEF <_> AS %A2.
 MCDEF P1P2 AS 0002
-MCDEF Data AS _ FFC(F,%H2D(%A1.)*2-NSLENG(_).)
+MCDEF Data AS _ STRING(%H2D(%A1.)*2-NSLENG(_).,F)
 MCGO L4
 %L21.+
 MCDEF P1P2 AS %A1.
@@ -276,7 +283,7 @@ MCGO L4
 %L3.+
 MCDEF <_> AS %A3.
 MCDEF P1P2 AS %A1.
-MCDEF Data AS _ FFC(F,%H2D(%A2.)*2-NSLENG(_).)
+MCDEF Data AS _ STRING(%H2D(%A2.)*2-NSLENG(_).,F)
 %L4.+
 cmd: 00DC P1P2 @{ Data}
 rsp: .*
