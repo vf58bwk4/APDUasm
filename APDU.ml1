@@ -162,7 +162,6 @@ MCDEF Len AS D2H(%T1.)
 STRING(%2-MCLENG(Len).,0)Len<>RNL(Val)+
 >
 MCDEF @ WITH [] WITH {} AS <%A1.@{%B2.}>
-MCDEF ${} AS <%A1.@{%B2.}>
 ;;
 ;; Nibble-Swap
 MCDEF NBSWAP WITHS () AS <+
