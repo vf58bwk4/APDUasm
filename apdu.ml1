@@ -21,6 +21,15 @@ MCGO L2
 MCGO L1
 >
 ;;
+;; Returns a string containing a repeating character string of the length specified
+MCDEF STRING WITHS (,) AS <+
+MCSET T1 = %A1.
+%L11.MCGO L0 UNLESS T1 GE 1
+%A2.+
+MCSET T1 = T1 - 1
+MCGO L11
+>
+;;
 MCDEF DOP1 TIMES NL AS <+
 MCSET P1 = 1
 %L1.MCGO L0 IF P1 GR %A1.
@@ -28,18 +37,21 @@ MCSET P1 = 1
 MCGO L1
 >
 ;;
-;; remove NL
-MCDEF RNL WITHS () AS <+
+;; clear any format
+MCDEF CLRFMT WITHS () AS <+
 MCSET T2 = MCLENG(%A1.)
 MCSET T1 = 1
-%L2.+
+%L1.+
 MCGO L0 IF T1 GR T2
-MCGO L3 IF MCSUB(%A1.,%T1.,%T1.) = <
+MCGO L2 IF MCSUB(%A1.,%T1.,%T1.) = < >
+MCGO L2 IF MCSUB(%A1.,%T1.,%T1.) = <	>
+MCGO L2 IF MCSUB(%A1.,%T1.,%T1.) = <
 >
+MCGO L2 IF MCSUB(%A1.,%T1.,%T1.) = <->
 MCSUB(%A1.,%T1.,%T1.)+
-%L3.+
+%L2.+
 MCSET T1 = T1 + 1
-MCGO L2
+MCGO L1
 >
 ;;
 ;; length w/o spaces
@@ -139,27 +151,20 @@ MCGO L0
 %L1.+
 %A2.>
 ;;
-;; Returns a string containing a repeating character string of the length specified
-MCDEF STRING WITHS (,) AS <+
-MCSET T1 = %A1.
-%L11.MCGO L0 UNLESS T1 GE 1
-%A2.+
-MCSET T1 = T1 - 1
-MCGO L11
->
-;;
 ;; LLV, LV & TLV
 MCDEF @ WITH @ WITH {} AS <+
-MCDEF Val AS %B1.
-MCSET T1 = NSLENG(Val)/2
+MCDEF AIVal AS %B1.
+MCDEF CFVal AS CLRFMT(AIVal)
+MCSET T1 = MCLENG(CFVal)/2
 MCDEF Len AS D2H(%T1.)
-STRING(%4-MCLENG(Len).,0)Len<>RNL(Val)+
+STRING(%4-MCLENG(Len).,0)Len<>CFVal+
 >
 MCDEF @ WITH {} AS <+
-MCDEF Val AS %B1.
-MCSET T1 = NSLENG(Val)/2
+MCDEF AIVal AS %B1.
+MCDEF CFVal AS CLRFMT(AIVal)
+MCSET T1 = MCLENG(CFVal)/2
 MCDEF Len AS D2H(%T1.)
-STRING(%2-MCLENG(Len).,0)Len<>RNL(Val)+
+STRING(%2-MCLENG(Len).,0)Len<>CFVal+
 >
 MCDEF @ WITH [] WITH {} AS <%A1.@{%B2.}>
 ;;
