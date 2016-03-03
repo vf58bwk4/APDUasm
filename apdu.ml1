@@ -1,9 +1,9 @@
+MCSKIP ; WITH ; NL
+MCINS %.
 MCSKIP MT,<>
 MCSKIP + WITHS NL
-MCSKIP ;WITH; NL
-MCINS %.
 ;;
-;; FOR P1 = 1 STEP 2 TO 10
+;; FOR P1 = 1 [STEP 2] TO 10
 ;; body
 ;; REPEAT
 MCDEF MCFOR = OPT STEP N1 OR N1 TO ALL NL REPEAT
@@ -23,11 +23,12 @@ MCGO L1
 ;;
 ;; Returns a string containing a repeating character string of the length specified
 MCDEF STRING WITHS (,) AS <+
+MCDEF <_> AS %A2.
 MCSET T1 = %A1.
-%L11.MCGO L0 UNLESS T1 GE 1
-%A2.+
+%L1.MCGO L0 UNLESS T1 GE 1
+_+
 MCSET T1 = T1 - 1
-MCGO L11
+MCGO L1
 >
 ;;
 MCDEF DOP1 TIMES NL AS <+
@@ -39,46 +40,45 @@ MCGO L1
 ;;
 ;; clear any format
 MCDEF CLRFMT WITHS () AS <+
-MCSET T2 = MCLENG(%A1.)
+MCDEF <_> AS %A1.
+MCSET T2 = MCLENG(_)
 MCSET T1 = 1
-%L1.+
-MCGO L0 IF T1 GR T2
-MCGO L2 IF MCSUB(%A1.,%T1.,%T1.) = < >
-MCGO L2 IF MCSUB(%A1.,%T1.,%T1.) = <	>
-MCGO L2 IF MCSUB(%A1.,%T1.,%T1.) = <
+%L1.MCGO L0 IF T1 GR T2
+MCGO L2 IF MCSUB(_,%T1.,%T1.) = < >
+MCGO L2 IF MCSUB(_,%T1.,%T1.) = <	>
+MCGO L2 IF MCSUB(_,%T1.,%T1.) = <
 >
-MCGO L2 IF MCSUB(%A1.,%T1.,%T1.) = <->
-MCSUB(%A1.,%T1.,%T1.)+
-%L2.+
-MCSET T1 = T1 + 1
+MCGO L2 IF MCSUB(_,%T1.,%T1.) = <->
+MCSUB(_,%T1.,%T1.)+
+%L2.MCSET T1 = T1 + 1
 MCGO L1
 >
 ;;
 ;; length w/o spaces
 MCDEF NSLENG WITHS () AS <+
-MCSET T1 = 1
-MCSET T2 = MCLENG(%A1.)
+MCDEF <_> AS %A1.
 MCSET T3 = 0
-%L11.MCGO L10 IF T1 GR T2
-MCGO L12 IF MCSUB(%A1.,%T1.,%T1.) = < >
-MCGO L12 IF MCSUB(%A1.,%T1.,%T1.) = <	>
-MCGO L12 IF MCSUB(%A1.,%T1.,%T1.) = <
+MCSET T2 = MCLENG(_)
+MCSET T1 = 1
+%L1.MCGO L10 IF T1 GR T2
+MCGO L2 IF MCSUB(_,%T1.,%T1.) = < >
+MCGO L2 IF MCSUB(_,%T1.,%T1.) = <	>
+MCGO L2 IF MCSUB(_,%T1.,%T1.) = <
 >
 MCSET T3 = T3 + 1
-%L12.+ 
-MCSET T1 = T1 + 1
-MCGO L11
+%L2.MCSET T1 = T1 + 1
+MCGO L1
 %L10.+
 %T3.>
 ;;
 ;; reverse string
 MCDEF STRREVERSE WITHS () AS <+
-MCSET T1 = MCLENG(%A1.)
-%L11.MCGO L10 IF T1 EN 0
-MCSUB(%A1.,%T1.,%T1.)+
+MCDEF <_> AS %A1.
+MCSET T1 = MCLENG(_)
+%L1.MCGO L0 IF T1 EN 0
+MCSUB(_,%T1.,%T1.)+
 MCSET T1 = T1 - 1
-MCGO L11
-%L10.+
+MCGO L1
 >
 ;;
 ;; decimal -> hex
@@ -145,11 +145,13 @@ MCGO L11
 ;;
 ;; maximum
 MCDEF MAX WITHS (,) AS <+
-MCGO L1 IF %A2. GE %A1.
-%A1.+
+MCDEF <$1> AS %A1.
+MCDEF <$2> AS %A2.
+MCGO L1 IF $2 GE $1
+$1+
 MCGO L0
 %L1.+
-%A2.>
+$2>
 ;;
 ;; LLV, LV & TLV
 MCDEF @ WITH @ WITH {} AS <+
