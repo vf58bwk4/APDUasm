@@ -1,0 +1,14 @@
+MCDEF AIDUSIM    AS A0000000871002FF47F00189000001FF
+MCDEF AIDMIRpack AS FF434E5258110102
+MCDEF AIDMIRinst AS FF434E5258110102000000004D494100
+MCDEF AIDSSMpack AS FF434E525811010101
+MCDEF AIDSSMinst AS FF434E525811010101000000FFFFFF00
+;;
+cmd: #{init-sec-ch(cm-aid=A000000003000000,S-ENC-key={$KIC1},S-MAC-key={$KID1},DEK={$KIK1},key-version-number=0,)}
+rsp: .*
+//Installing CAP file: *__miragt_app.cap 
+cmd: 80E6 0C00 Lc @{AIDMIRpack} @{AIDMIRinst} @{AIDMIRinst} @{00} @{@[EA]{ @[80]{ FF 00 3C 010101 00 @{0106} @{} 00} @[81]{@{}@{}@{}@{AIDUSIM}@{}@{}}} @[C9]{@{}@{}@{01}@{AIDUSIM}}} @{}
+rsp: .*
+//Installing CAP file: *__ssm_cellsim_app.cap
+cmd: 80E6 0C00 Lc @{AIDSSMpack} @{AIDSSMinst} @{AIDSSMinst} @{00} @{@[EA]{ @[80]{ FF 01 20 00 00 @{} @{} 00} @[81]{@{}@{}@{}@{AIDUSIM}@{}@{}}} @[C9]{@{}@{AIDUSIM}}} @{}
+rsp: .*
